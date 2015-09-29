@@ -18,13 +18,15 @@ class Train
 		puts "кол-во вагонов: #{@wagons}"
 	end
 
-	def print_type
-		puts "тип: #{@type}"
-	end
+	
+#	def print_type
+#		puts "тип: #{@type}"
+#	end
+#
+#	def print_number
+#		puts "номер: #{@number}"
+#	end
 
-	def print_number
-		puts "номер: #{@number}"
-	end
 
 	def brake
 		if @speed >= 10
@@ -105,6 +107,7 @@ end
 
 
 
+=begin
 my_train = Train.new(1,:cargo,4)
 alien_train = Train.new(13,:pass,6)
 
@@ -136,4 +139,5 @@ romashka.departure(alien_train)
 romashka.print_list
 
 cheburashka = Station.new(:cheburashka)
+=end
 
