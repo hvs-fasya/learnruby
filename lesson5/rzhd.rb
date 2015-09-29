@@ -18,13 +18,13 @@ class Train
 		puts "кол-во вагонов: #{@wagons}"
 	end
 
-#	def print_type
-#		puts "тип: #{@type}"
-#	end
-#
-#	def print_number
-#		puts "номер: #{@number}"
-#	end
+	def print_type
+		puts "тип: #{@type}"
+	end
+
+	def print_number
+		puts "номер: #{@number}"
+	end
 
 	def brake
 		if @speed >= 10
@@ -69,7 +69,7 @@ class Station
 	attr_reader :title
 	attr_accessor :trains_list
 
-	def initialize(title, trains_list)
+	def initialize(title)
 		@title = title
 		@trains_list = []
 	end
@@ -103,7 +103,7 @@ class Station
 
 end
 
-=begin
+
 
 my_train = Train.new(1,:cargo,4)
 alien_train = Train.new(13,:pass,6)
@@ -135,5 +135,5 @@ romashka.print_type_count
 romashka.departure(alien_train)
 romashka.print_list
 
-cheburashka = Station.new(:cheburashka)=end
-=end
+cheburashka = Station.new(:cheburashka)
+
