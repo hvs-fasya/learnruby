@@ -71,7 +71,7 @@ class Station
 
 	def initialize(title, trains_list)
 		@title = title
-		@trains_list = trains_list
+		@trains_list = []
 	end
 
 	def arrive(train)
@@ -122,7 +122,7 @@ my_train.brake
 my_train.more_wagon
 my_train.less_wagon
 
-romashka = Station.new(:romashka,[])
+romashka = Station.new(:romashka)
 
 romashka.print_list
 romashka.arrive(my_train)
@@ -135,5 +135,5 @@ romashka.print_type_count
 romashka.departure(alien_train)
 romashka.print_list
 
-cheburashka = Station.new(:cheburashka,[])=end
+cheburashka = Station.new(:cheburashka)=end
 =end
