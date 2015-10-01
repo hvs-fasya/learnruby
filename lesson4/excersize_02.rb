@@ -1,6 +1,6 @@
 puts "Введите целое число"
 x = gets.to_i
-x > 1 ? interval = (1..x) : interval = (x..1)
+interval = (x > 1) ? (1..x) : (x..1)
 delimeter = interval.count / 2
 
 #для each
