@@ -1,7 +1,7 @@
 puts "Введите целое число"
 x = gets.to_i
 interval = (x > 1) ? (1..x) : (x..1)
-delimeter = interval.count / 2
+delimeter = (x > 1) ? x / 2 : x.abs / 2 + 1
 
 #для each
 sum_each = 0
