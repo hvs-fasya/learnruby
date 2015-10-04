@@ -7,5 +7,3 @@ class PassengerTrain < Train
 	end
 
 end
-
-pass_16 = PassengerTrain.new(16,8)

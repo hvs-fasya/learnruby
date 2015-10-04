@@ -1,7 +1,6 @@
 class Station
 
 	attr_reader :title
-	attr_accessor :trains_list
 
 	def initialize(title)
 		@title = title
@@ -10,29 +9,49 @@ class Station
 
 	def arrive(train)
 		@trains_list.push(train)
-		puts "welcome паровозу № #{train.number}"
+		train.current_station = self
+		puts "welcome паровозу № #{train.number} на станции #{@title}"
 	end
 
 	def departure (train)
 		if @trains_list.include?(train)
 			@trains_list.delete(train)
-			puts "buy-buy паровозу № #{train.number}"
+			train.current_station = Depo.instance
+			puts "buy-buy паровозу № #{train.number} со станции #{@title}"
 		else
-			puts "нет у нас такого паровоза"
+			puts "на станции #{@title}нет такого паровоза"
 		end
 	end
 
-	def print_list
+	def trains_list
+		@trains_list.clone
+	end
+
+	def print_trains_list
 		if @trains_list.empty?
-			puts "у нас нет ни одного паровоза"
+			puts "на станции #{title} нет ни одного паровоза"
 		else
-			@trains_list.each { |train|  train.print_number}
+			puts "на станции #{title} находятся #{get_readable_trains_list}"
 		end
 	end
 
 	def print_type_count
-		puts "грузовых на станции #{title} - #{@trains_list.count {|el| el.type == :cargo} }"
-		puts "пассажирских на станции #{title} - #{@trains_list.count {|el| el.type == :pass} }"
+		puts "грузовых на станции #{title} - #{get_cargo_trains_list.count}: #{get_cargo_trains_list.join(", ")}"
+		puts "пассажирских на станции #{title} - #{get_pass_trains_list.count}: #{get_pass_trains_list.join(", ")}"
+	end
+
+	private
+
+	def get_readable_trains_list
+		@trains_list.collect { |train|  "паровоз № #{train.number}" }.join(", ")
+	end
+
+	def get_cargo_trains_list
+		@trains_list.map {|el| "паровоз № #{el.number}" if el.type == :cargo}.compact
+	end
+
+	def get_pass_trains_list
+		 @trains_list.map {|el| "паровоз № #{el.number}" if el.type == :pass}.compact
 	end
 
 end
