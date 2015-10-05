@@ -262,36 +262,29 @@ reserve_seat.task_procedure = Proc.new{
 # Разгрузить грузовой вагон
 # процедура и параметры
 # ---------------------------------------------------------------------
-# set_seat_free.task_procedure = Proc.new{
-# 	list = all_trains_list.select{|el| el.type == :cargo && !el.wagons_list.empty?}
-# 	if list.empty?
-# 		puts "нет грузовых поездов с прицепленными вагонами - не с чем работать"
-# 	else
-# 		puts "Выберите из списка номер поезда под загрузку"
-# 		list.each{|el| puts "#{el.number} - #{el.wagons_quantity} вагонов(а)"}
-# 		train_number = gets.strip
-# 		train_for_loading = list.select{|el| el.number == train_number}[0]
-# 		puts "Выберите номер вагона из списка"
-# 		train_for_loading.wagons_list.each_index{|i| puts i}
-# 		num = gets.strip.to_i
-# 		wagon = train_for_loading.wagons_list[num]
-# 		if wagon.volume_occupied > 0
-# 			puts "Задайте объем разгрузки"
-# 			cargo = gets.strip.to_i
-# 			if cargo <= wagon.volume_occupied
-# 				wagon.unload(cargo)
-# 				puts "выгружено #{cargo}, осталось груза - #{wagon.volume_occupied}, свободно - #{wagon.volume_left} ft"
-# 			else
-# 				cargo = wagon.volume_occupied
-# 				wagon.unload(cargo)
-# 				puts "выгружено только #{cargo} - сколько было("
-# 			end
-# 		else
-# 			puts "вагон пустой - нечего выгружать"
-# 		end
-# 	end
-# 	}
+set_seat_free.task_procedure = Proc.new{
+	list = all_trains_list.select{|el| el.type == :pass && !el.wagons_list.empty?}
+	if list.empty?
+		puts "нет пассажирских поездов с прицепленными вагонами - не с чем работать"
+	else
+		puts "Выберите из списка номер поезда"
+		list.each{|el| puts "#{el.number} - #{el.wagons_quantity} вагонов(а)"}
+		train_number = gets.strip
+		train_for_set_free = list.select{|el| el.number == train_number}[0]
+		puts "Выберите номер вагона из списка"
+		train_for_set_free.wagons_list.each_index{|i| puts i}
+		num = gets.strip.to_i
+		wagon = train_for_set_free.wagons_list[num]
+		if wagon.seats_occupied > 0
+			wagon.seat_set_free
+			puts "место освобождено, свободно - #{wagon.seats_left} мест(а)"
+		else
+			puts "вагон пустой - нечего освобождать"
+		end
+	end
+	}
 # ---------------------------------------------------------------------
+
 # ---------------------------------------------------------------------
 # Поместить поезд на станцию
 # процедура и параметры
