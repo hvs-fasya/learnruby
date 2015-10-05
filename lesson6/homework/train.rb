@@ -9,7 +9,7 @@ require_relative 'nowhere'
 class Train
 
 	attr_reader :number, :type, :speed, :route
-	attr_accessor :current_station
+	attr_accessor :current_station, :wagons_list
 
 	def initialize(number,type)
 		@number = number
@@ -19,10 +19,6 @@ class Train
 		@route = Nowhere.instance
 		@current_station = Depo.instance
 		Depo.instance.arrive(self)
-	end
-
-	def wagons_list
-		@wagons_list.clone
 	end
 
 	def wagons_quantity

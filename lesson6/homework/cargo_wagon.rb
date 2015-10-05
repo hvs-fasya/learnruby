@@ -23,12 +23,12 @@ class CargoWagon
 
 #ззагрузить объем груза = cargo
 	def load (cargo)
-		@volume_occupied = @volume_occupied + cargo < @capacity ? @volume_occupied + cargo : @volume_occupied
+		@volume_occupied = @volume_occupied + cargo <= @capacity ? @volume_occupied + cargo : @volume_occupied
 	end
 
 #выгрузить объем груза = cargo
 	def unload (cargo)
-		@volume_occupied = @volume_occupied > cargo ? @volume_occupied - cargo : @volume_occupied
+		@volume_occupied = @volume_occupied >= cargo ? @volume_occupied - cargo : @volume_occupied
 	end
 
 # установка флага "прицеплен"
