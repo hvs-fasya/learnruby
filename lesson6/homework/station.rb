@@ -5,6 +5,20 @@ class Station
 	def initialize(title)
 		@title = title
 		@trains_list = []
+		validate!
+	end
+
+	def validate!
+		raise ArgumentError, "не задано название станции" if @title.nil?
+		raise ArgumentError, "задано пустое название станции" if @title.empty?
+		raise ArgumentError, "какое-то немыслимое название станции" if @title !~ /^[a-zA-Z0-9][a-zA-Z0-9\s-_]+$/
+		true
+	end
+
+	def valid?
+			self.validate!
+		rescue ArgumentError
+			false
 	end
 
 	def arrive(train)

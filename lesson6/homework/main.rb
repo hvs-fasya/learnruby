@@ -30,6 +30,7 @@ all_trains_list = []
 unhooked_cargo_wagons_list = []
 unhooked_pass_wagons_list = []
 
+
 		puts "-----------------------------------------------------------"
 		puts "ДОБРО ПОЖАЛОВАТЬ В РЖД"
 # ---------------------------------------------------------------------
@@ -51,11 +52,35 @@ main_menu.task_params = [all_tasks]
 # Создание новой станции
 # процедура и параметры
 # ---------------------------------------------------------------------
-new_station.task_procedure = Proc.new {||
-	puts "Задайте название станции"
-	title_new = gets.strip
-	all_stations_list.push(Station.new(title_new))
-	puts "создана станция #{all_stations_list[-1].title}"
+# def attempts_counter(error,attempts)
+# 	attempts += 1
+# 	puts error.message
+# 	if attempts < 3
+# 		puts "попробуйте снова - у вас есть еще #{3-attempts} попытка(и)"
+# 		retry
+# 	else
+# 		puts "даже с трех попыток не получилось, едем дальше"
+# 	end
+# end
+
+new_station.task_procedure = Proc.new {
+		attempt = 0
+	begin
+		puts "Задайте название станции"
+		title_new = gets.strip
+		all_stations_list.push(Station.new(title_new))
+		puts "создана станция #{all_stations_list[-1].title}"
+	rescue ArgumentError => e
+		# attempts_counter(e,attempt)
+		attempt += 1
+		puts e.message
+		if attempt < 3
+			puts "попробуйте снова - у вас есть еще #{3-attempt} попытка(и)"
+			retry
+		else
+				puts "даже с трех попыток не получилось, едем дальше"
+		end
+	end
 	}
 # ---------------------------------------------------------------------
 
@@ -64,23 +89,35 @@ new_station.task_procedure = Proc.new {||
 # процедура и параметры
 # ---------------------------------------------------------------------
 new_route.task_procedure = Proc.new{
-	if all_stations_list.empty?
-		puts "нет ни одной станции - не из чего создавать маршрут"
-	else
-		puts "Задайте начальную станцию из списка"
-		station_list.task_procedure.call
-		start_title = gets.strip
-		start = all_stations_list.select{|el| el.title == start_title}[0]
-		puts "Задайте конечную станцию из списка"
-		station_list.task_procedure.call
-		last_title = gets.strip
-		last = all_stations_list.select{|el| el.title == last_title}[0]
-		if all_stations_list.include?(last) && all_stations_list.include?(start)
-			all_routes_list.push(Route.new(start,last))
-			puts "создан новый маршрут #{all_routes_list[-1].start_station.title}->#{all_routes_list[-1].last_station.title}"
+		attempt = 0
+	begin
+		if all_stations_list.empty?
+			puts "нет ни одной станции - не из чего создавать маршрут"
 		else
-			puts "не вышло создать маршрут - неправильно заданы станции"
+			puts "Задайте начальную станцию из списка"
+			station_list.task_procedure.call
+			start_title = gets.strip
+			start = all_stations_list.select{|el| el.title == start_title}[0]
+			puts "Задайте конечную станцию из списка"
+			station_list.task_procedure.call
+			last_title = gets.strip
+			last = all_stations_list.select{|el| el.title == last_title}[0]
+			# if all_stations_list.include?(last) && all_stations_list.include?(start)
+				all_routes_list.push(Route.new(start,last))
+				puts "создан новый маршрут #{all_routes_list[-1].start_station.title}->#{all_routes_list[-1].last_station.title}"
+			# else
+			# 	puts "не вышло создать маршрут - неправильно заданы станции"
+			# end
 		end
+	rescue ArgumentError => e
+			attempt += 1
+			puts e.message
+			if attempt < 3
+				puts "попробуйте снова - у вас есть еще #{3-attempt} попытки"
+				retry
+			else
+				puts "даже с трех попыток не получилось, едем дальше"
+			end
 	end
 	}
 # ---------------------------------------------------------------------
@@ -90,13 +127,26 @@ new_route.task_procedure = Proc.new{
 # процедура и параметры
 # ---------------------------------------------------------------------
 new_train.task_procedure = Proc.new{
-	puts "Задайте номер нового поезда"
-	number_new = gets.strip
-	puts "Выберите тип нового поезда: с - грузовой, p - пассажирский"
-	type_code = gets.strip
-	type_new = (type_code == "c") ? :cargo : :pass
-	all_trains_list.push(Train.new(number_new,type_new))
-	puts "тип нового поезда #{all_trains_list[-1].type}"
+			attempt = 0
+	begin
+			puts "Задайте номер нового поезда"
+			number_new = gets.strip
+			puts "Выберите тип нового поезда: с - грузовой, p - пассажирский"
+			type_code = gets.strip
+			type_new = (type_code == "c") ? :cargo : :pass
+			all_trains_list.push(Train.new(number_new,type_new))
+			puts "тип нового поезда #{all_trains_list[-1].type}"
+		rescue ArgumentError => e
+			attempt += 1
+			puts e.message
+			puts e.backtrace
+			if attempt < 3
+				puts "попробуйте снова - у вас есть еще #{3-attempt} попытки"
+				retry
+			else
+				puts "даже с трех попыток не получилось, едем дальше"
+			end
+	end
 	}
 # ---------------------------------------------------------------------
 
@@ -105,34 +155,46 @@ new_train.task_procedure = Proc.new{
 # процедура и параметры
 # ---------------------------------------------------------------------
 hook_wagon.task_procedure = Proc.new{
-	if all_trains_list.empty?
-		puts "Нет ни одного поезда - не к чему цеплять"
-	else
-		puts "Выберите номер поезд из списка"
-		all_trains_list.each{|el| puts "#{el.number} (тип #{el.type})"}
-		train_number = gets.strip
-		train_for_hooking = all_trains_list.select{|el| el.number == train_number}[0]
-		if train_for_hooking.type == :cargo
-			if unhooked_cargo_wagons_list.empty?
-				puts "Задайте вместимость нового вагона (число)"
-				capacity = gets.strip.to_i
-				train_for_hooking.add_wagon(CargoWagon.new(capacity))
-				puts "К поезду № #{train_for_hooking.number} прицеплен новый грузовой вагон - в вагоне свободно #{train_for_hooking.wagons_list[-1].volume_left} ft"
-			else
-				train_for_hooking.add_wagon(unhooked_cargo_wagons_list[-1])
-				puts "К поезду № #{train_for_hooking.number} прицеплен грузовой вагон из резерва - в вагоне свободно #{train_for_hooking.wagons_list[-1].volume_left} ft"
-			end
+		attempt = 0
+	begin
+		if all_trains_list.empty?
+			puts "Нет ни одного поезда - не к чему цеплять"
 		else
-			if unhooked_pass_wagons_list.empty?
-				puts "Задайте кол-во мест (целое число)"
-				seats = gets.strip.to_i
-				train_for_hooking.add_wagon(PassWagon.new(seats))
-				puts "К поезду № #{train_for_hooking.number} прицеплен новый пассажирский вагон - в вагоне свободно #{train_for_hooking.wagons_list[-1].seats_left} мест(а)"
-			else
-				train_for_hooking.add_wagon(unhooked_pass_wagons_list[-1])
-				puts "К поезду № #{train_for_hooking.number} прицеплен пассажирский вагон из резерва - в вагоне свободно #{train_for_hooking.wagons_list[-1].seats_left} мест(а)"
-			end
+			puts "Выберите номер поезд из списка"
+			all_trains_list.each{|el| puts "#{el.number} (тип #{el.type})"}
+			train_number = gets.strip
+			train_for_hooking = all_trains_list.select{|el| el.number == train_number}[0]
+				if train_for_hooking.type == :cargo
+					if unhooked_cargo_wagons_list.empty?
+						puts "Задайте вместимость нового вагона (число)"
+						capacity = gets.strip.to_i
+						train_for_hooking.add_wagon(CargoWagon.new(capacity))
+						puts "К поезду № #{train_for_hooking.number} прицеплен новый грузовой вагон - в вагоне свободно #{train_for_hooking.wagons_list[-1].volume_left} ft"
+					else
+						train_for_hooking.add_wagon(unhooked_cargo_wagons_list[-1])
+						puts "К поезду № #{train_for_hooking.number} прицеплен грузовой вагон из резерва - в вагоне свободно #{train_for_hooking.wagons_list[-1].volume_left} ft"
+					end
+				else
+					if unhooked_pass_wagons_list.empty?
+						puts "Задайте кол-во мест (целое число)"
+						seats = gets.strip.to_i
+						train_for_hooking.add_wagon(PassWagon.new(seats))
+						puts "К поезду № #{train_for_hooking.number} прицеплен новый пассажирский вагон - в вагоне свободно #{train_for_hooking.wagons_list[-1].seats_left} мест(а)"
+					else
+						train_for_hooking.add_wagon(unhooked_pass_wagons_list[-1])
+						puts "К поезду № #{train_for_hooking.number} прицеплен пассажирский вагон из резерва - в вагоне свободно #{train_for_hooking.wagons_list[-1].seats_left} мест(а)"
+					end
+				end
 		end
+	rescue NoMethodError, ArgumentError => e
+			attempt += 1
+			puts e.message
+			if attempt < 3
+				puts "попробуйте снова - у вас есть еще #{3-attempt} попытки"
+				retry
+			else
+				puts "даже с трех попыток не получилось, едем дальше"
+			end
 	end
 	}
 # ---------------------------------------------------------------------

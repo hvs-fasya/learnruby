@@ -9,6 +9,20 @@ class Route
 		@start_station = start_station
 		@last_station = last_station
 		@inner_stations_list = []
+		validate!
+	end
+
+	def validate!
+		raise ArgumentError, "начальная и конечная станции должны быть реально существующими Станциями" if !@start_station.is_a?(Station) #&& !@start_station.is_a?(Depo)
+		raise ArgumentError, "начальная и конечная станции должны быть реально существующими Станциями" if !@last_station.is_a?(Station) #&& !@last_station.is_a?(Depo)
+		raise ArgumentError, "начальная и конечная станции должны быть разными" if (@last_station == @start_station) && !@start_station.is_a?(Depo)
+		true
+	end
+
+	def valid?
+			self.validate!
+		rescue ArgumentError
+			false
 	end
 
 	def add_station_to_route(station,previous_station)
@@ -31,7 +45,7 @@ class Route
 				@inner_stations_list.delete_at(0)
 				puts "start station deleted, #{@start_station} became the start station"
 			else
-				if @inner_stations_list.delete(station)
+					if @inner_stations_list.delete(station)
 					puts "station deleted"
 				else
 					puts "no such station in route"

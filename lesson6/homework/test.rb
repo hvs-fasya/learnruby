@@ -173,3 +173,84 @@ myTrain_122.move_one_step_along_route
 myTrain_122.move_one_step_along_route
 myTrain_122.move_one_step_along_route
 myCargo.move_one_step_along_route
+
+# -------------------------------------
+# Manufacturer
+# -------------------------------------
+myTrain_122.manufacturer ="Toyota"
+puts myTrain_122.manufacturer
+pWagon.manufacturer = "Mitsubishi"
+puts pWagon.manufacturer
+cWagon.manufacturer = "Щербинский вагоностроительный завод"
+puts cWagon.manufacturer
+
+# -----------------------------
+# Train.find
+# -----------------------------
+puts Train.find(122)
+puts Train.find(115)
+puts Train.all_trains
+# puts InstanceCounter.instances
+puts Train.class_variables
+puts Train.ancestors
+# puts Train.instances
+
+# -----------------------------
+# validate! train
+# -----------------------------
+valid_train = Train.new("aas-12", :cargo)
+puts valid_train.validate!
+unvalid_number_train = Train.new("aa", :pass)
+# puts unvalid_number_train.validate!
+unvalid_type_train = Train.new("aaw-11", :pa)
+# puts unvalid_type_train.validate!
+invalid_number_cargotrain = CargoTrain.new("ss")
+# puts invalid_number_cargotrain.validate!
+
+# -----------------------------
+# valid? train
+# -----------------------------
+puts valid_train.valid?
+puts unvalid_number_train.valid?
+puts unvalid_type_train.valid?
+puts invalid_number_cargotrain.valid?
+
+# -----------------------------
+
+# -----------------------------
+valid_station = Station.new("nizhnie kozly")
+unvalid_station = Station.new("dhfj ((")
+# puts unvalid_station.validate!
+puts "Проверка valid?"
+# -----------------------------
+# valid? station
+# -----------------------------
+puts valid_station.valid?
+puts unvalid_station.valid?
+puts myCargo.valid?
+puts myPass.valid?
+# puts myPass.validate!
+myPass.manufacturer = "Toyota"
+puts myPass.manufacturer
+puts valid_train.validate!
+puts cWagon.capacity.to_i.class
+puts cWagon.validate!
+#--------------------------------
+testWagon = CargoWagon.new(20)
+# testWagon.capacity = nil
+# puts testWagon.capacity.class
+# puts testWagon.validate!
+#-------------------------------
+testWagon = PassWagon.new(24)
+# testWagon.seats_max = nil
+puts testWagon.seats_max.class
+# puts testWagon.validate!
+#-------------------------------
+puts "----"
+testRoute = Route.new(romashka, Depo.instance)
+puts testRoute.valid?
+puts testRoute.validate!
+
+# a = Station.new("aaa")
+# puts a.is_a?(Depo)
+# puts Depo.instance.is_a?(Station)

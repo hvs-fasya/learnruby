@@ -1,3 +1,5 @@
+require_relative 'manufacturer'
+
 class PassWagon
 
 #Максимальное кол-во мест
@@ -7,13 +9,31 @@ class PassWagon
 #Может возвращать кол-во занятых мест.
 	attr_reader :seats_max, :seats_occupied, :type
 	attr_accessor :hooked
+	# attr_writer :seats_max
+
+	include Manufacturer
 
 	def initialize(seats_max)
 		@seats_max = seats_max
 		@seats_occupied = 0
 		@type = :pass
 		@hooked = false
+		validate!
 	end
+
+	def validate!
+		# raise ArgumentError, "не задана вместимость грузового вагона" if @capacity.nil?
+		raise ArgumentError, "вмсетимость вагона должна быть числом и желательно целым" if @seats_max.class != Fixnum
+		raise ArgumentError, "вмсетимость вагона должна больше нуля и меньше 1000" if 0 >= @seats_max || @seats_max >= 1000
+		true
+	end
+
+	def valid?
+			self.validate!
+		rescue ArgumentError
+			false
+	end
+
 #возвращает кол-во свободных мест
 	def seats_left
 		@seats_max - @seats_occupied

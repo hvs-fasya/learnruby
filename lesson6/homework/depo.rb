@@ -1,5 +1,4 @@
 require_relative 'station'
-
 require 'singleton'
 
 class Depo < Station

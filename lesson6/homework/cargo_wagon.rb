@@ -1,3 +1,5 @@
+require_relative 'manufacturer'
+
 class CargoWagon
 
 # Максимальный объем груза 
@@ -8,12 +10,29 @@ class CargoWagon
 
 	attr_reader :capacity, :volume_occupied, :type
 	attr_accessor :hooked
+	# attr_writer :capacity
+
+	include Manufacturer
 
 	def initialize(capacity)
 		@capacity = capacity
 		@volume_occupied = 0
 		@type = :cargo
 		@hooked = false
+		validate!
+	end
+
+	def validate!
+		# raise ArgumentError, "не задана вместимость грузового вагона" if @capacity.nil?
+		raise ArgumentError, "вмсетимость грузового вагона должна быть числом и желательно целым" if @capacity.class != Fixnum
+		raise ArgumentError, "вмсетимость грузового вагона должна больше нуля и меньше 1000" if 0 >= @capacity || @capacity >= 1000
+		true
+	end
+
+	def valid?
+			self.validate!
+		rescue ArgumentError
+			false
 	end
 
 #возвращает доступный для погрзки объем
@@ -45,21 +64,3 @@ class CargoWagon
 	attr_writer :volume_occupied
 
 end
-
-# cWagon = CargoWagon.new(20)
-
-# puts "максимальный объем груза - #{cWagon.capacity}"
-# puts "свободно - #{cWagon.volume_left} ft"
-# puts "загружено - #{cWagon.volume_occupied} ft"
-# cWagon.load(4)
-# puts "свободно - #{cWagon.volume_left} ft"
-# puts "загружено - #{cWagon.volume_occupied} ft"
-# cWagon.unload(6)
-# puts "свободно - #{cWagon.volume_left} ft"
-# puts "загружено - #{cWagon.volume_occupied} ft"
-# cWagon.unload(2)
-# puts "свободно - #{cWagon.volume_left} ft"
-# puts "загружено - #{cWagon.volume_occupied} ft"
-# cWagon.load(19)
-# puts "свободно - #{cWagon.volume_left} ft"
-# puts "загружено - #{cWagon.volume_occupied} ft"
