@@ -8,8 +8,12 @@ require_relative 'nowhere'
 require_relative 'manufacturer'
 require_relative 'instance_counter'
 require_relative 'custom_accessor'
+require_relative 'validation'
 
 class Train
+
+	extend Validation
+	include Validation
 
 	attr_reader :number, :type, :speed, :route, :all_trains
 	attr_accessor :current_station, :wagons_list
@@ -26,33 +30,38 @@ class Train
 	attr_accessor_with_history :speed
 	strong_attr_acessor :type, Symbol
 
+	validate :number, :presence
+	validate :number, :format, "/[a-z0-9]{3}-?[a-z0-9]{2}/i"
+	validate :current_station, :type, Station
+	validate :route, :type, Route
+
 	def initialize(number,type)
 		# super()
 		@number = number.to_s
 		@type = type
-		validate!
 		@wagons_list = []
 		@speed = 0
 		@route = Nowhere.instance
 		@current_station = Depo.instance
 		Depo.instance.arrive(self)
+		validate!
 		@@all_trains.push(self)
 	end
 
 	# extend InstanceGetter
-	def validate!
-		raise ArgumentError, "не задан номер поезда" if @number.nil?
-		raise ArgumentError, "задан пустой номер поезда" if @number.empty?
-		raise ArgumentError, "номер поезда не соответствует формату" if @number !~ /[a-z0-9]{3}-?[a-z0-9]{2}/i
-		raise ArgumentError, "тип поезда может быть либо :cargo либо :pass" if (@type != :cargo) && (@type != :pass)
-		true
-	end
+	# def validate!
+		# raise ArgumentError, "не задан номер поезда" if @number.nil?
+		# raise ArgumentError, "задан пустой номер поезда" if @number.empty?
+		# raise ArgumentError, "номер поезда не соответствует формату" if @number !~ /[a-z0-9]{3}-?[a-z0-9]{2}/i
+		# raise ArgumentError, "тип поезда может быть либо :cargo либо :pass" if (@type != :cargo) && (@type != :pass)
+		# true
+	# end
 
-	def valid?
-			self.validate!
-		rescue ArgumentError
-			false
-	end
+	# def valid?
+	# 		self.validate!
+	# 	rescue ArgumentError
+	# 		false
+	# end
 
 	def self.find (num)
 		a = @@all_trains.select{|el| el.number == num}[0]

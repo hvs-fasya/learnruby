@@ -2,8 +2,15 @@ require_relative 'station'
 
 class Route
 
+	include Validation
+
 	attr_reader :start_station, :last_station
 	attr_accessor :inner_stations_list
+
+	validate :start_station, :presence
+	validate :last_station, :presence
+	validate :start_station, :type, Station
+	validate :last_station, :type, Station
 
 	def initialize (start_station,last_station)
 		@start_station = start_station
@@ -12,18 +19,18 @@ class Route
 		validate!
 	end
 
-	def validate!
-		raise ArgumentError, "начальная и конечная станции должны быть реально существующими Станциями" if !@start_station.is_a?(Station) #&& !@start_station.is_a?(Depo)
-		raise ArgumentError, "начальная и конечная станции должны быть реально существующими Станциями" if !@last_station.is_a?(Station) #&& !@last_station.is_a?(Depo)
-		raise ArgumentError, "начальная и конечная станции должны быть разными" if (@last_station == @start_station) && !@start_station.is_a?(Depo)
-		true
-	end
+	# def validate!
+	# 	raise ArgumentError, "начальная и конечная станции должны быть реально существующими Станциями" if !@start_station.is_a?(Station) #&& !@start_station.is_a?(Depo)
+	# 	raise ArgumentError, "начальная и конечная станции должны быть реально существующими Станциями" if !@last_station.is_a?(Station) #&& !@last_station.is_a?(Depo)
+	# 	raise ArgumentError, "начальная и конечная станции должны быть разными" if (@last_station == @start_station) && !@start_station.is_a?(Depo)
+	# 	true
+	# end
 
-	def valid?
-			self.validate!
-		rescue ArgumentError
-			false
-	end
+	# def valid?
+	# 		self.validate!
+	# 	rescue ArgumentError
+	# 		false
+	# end
 
 	def add_station_to_route(station,previous_station)
 		if previous_station != @last_station && self.get_full_stations_list.include?(previous_station)

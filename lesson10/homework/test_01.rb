@@ -34,3 +34,6 @@ begin
 rescue ArgumentError => e
 	puts e.message
 end
+puts "-------"
+testTrain = Train.new("222-22", 5)
+puts testTrain.type
