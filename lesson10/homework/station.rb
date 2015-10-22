@@ -1,8 +1,10 @@
-require_relative 'validation'
+# require_relative 'validation'
+require_relative 'validation_variant'
 
 class Station
 
-	include Validation
+	extend Validation
+	# include Validation
 
 	attr_reader :title
 

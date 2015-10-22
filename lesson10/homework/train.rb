@@ -8,12 +8,13 @@ require_relative 'nowhere'
 require_relative 'manufacturer'
 require_relative 'instance_counter'
 require_relative 'custom_accessor'
-require_relative 'validation'
+require_relative 'validation_variant'
+# require_relative 'validation'
 
 class Train
 
 	extend Validation
-	include Validation
+	# include Validation
 
 	attr_reader :number, :type, :speed, :route, :all_trains
 	attr_accessor :current_station, :wagons_list
@@ -36,7 +37,6 @@ class Train
 	validate :route, :type, Route
 
 	def initialize(number,type)
-		# super()
 		@number = number.to_s
 		@type = type
 		@wagons_list = []

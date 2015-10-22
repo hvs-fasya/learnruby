@@ -9,7 +9,7 @@ require_relative 'route'
 myTrain_122 = Train.new("122-aa",:pass)
 romashka = Station.new(:romashka)
 romashka.arrive(myTrain_122)
-puts Train.validation_rules
+# puts Train.validation_rules
 myCargo = CargoTrain.new("444-cc")
 myCargo.add_wagon(CargoWagon.new(20))
 myCargo.add_wagon(CargoWagon.new(14))
@@ -49,7 +49,7 @@ puts "-------"
 # Train.validate :route, :type, Route
 # puts Train.number_presence
 # puts Train.number_format
-puts Train.validation_rules
+# puts Train.validation_rules
 # puts Train.number_presence
 # myTrain_122.number = nil
 # puts Train.number_format
@@ -60,10 +60,10 @@ puts Train.validation_rules
 # puts myCargo.number_format
 myCargoWrong = CargoTrain.new("333-33")
 # puts myCargoWrong.validate!
-# puts myCargoWrong.valid?
+puts myCargoWrong.valid?
 myCargoWrong.current_station = myTrain_122
 # puts myCargoWrong.current_station
-puts myCargoWrong.valid?
+# puts myCargoWrong.valid?
 romashka.arrive(myCargoWrong)
 puts myCargoWrong.valid?
 # myCargoWrong.route = myTrain_122

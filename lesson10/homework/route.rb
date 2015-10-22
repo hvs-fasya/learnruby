@@ -1,14 +1,16 @@
 require_relative 'station'
+require_relative 'validation_variant'
 
 class Route
 
-	include Validation
+	extend Validation
+	# include Validation
 
 	attr_reader :start_station, :last_station
 	attr_accessor :inner_stations_list
 
-	validate :start_station, :presence
-	validate :last_station, :presence
+	# validate :start_station, :presence
+	# validate :last_station, :presence
 	validate :start_station, :type, Station
 	validate :last_station, :type, Station
 
